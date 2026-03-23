@@ -2,6 +2,7 @@ package presentacion;
 
 import DAO.ContactoDAO;
 import dominio.Contacto;
+import validacion.Validaciones;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -36,8 +37,22 @@ public class AppAgendaContactos {
                         String nombre = sc.nextLine();
                         System.out.print("Teléfono: ");
                         String telefono = sc.nextLine();
-                        System.out.print("Email: ");
-                        String email = sc.nextLine();
+
+                        // Inicializamos las variables para que el compilador esté tranquilo
+                        String email = "";
+                        boolean esValido = false;
+
+                        do {
+                            System.out.print("Email: ");
+                            email = sc.nextLine();
+
+                            esValido = Validaciones.emailValidacion(email);
+
+                            if (!esValido) {
+                                System.out.println("Error: Formato de email inválido (debe contener '@').");
+                            }
+                        } while (!esValido);
+
                         dao.insertarContacto(new Contacto(nombre, telefono, email));
                     }
                     case 3 -> {
@@ -65,7 +80,7 @@ public class AppAgendaContactos {
                             System.out.println("Número incorrecto. Vuelve a intentarlo.");
                     }
             }catch(InputMismatchException e){
-                System.out.println("Ingresa un número entero.");
+                System.out.println("Ingresa un número del menú.");
                 sc.nextLine();
             }catch (NumberFormatException e) {
                 // Agregamos este catch para proteger los parseInt de los casos 3 y 4
